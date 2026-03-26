@@ -9,16 +9,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - run: npm install
+      - name: Install dependencies
+        run: npm install
 
-      - run: npm install -g expo-cli
+      - name: Install Expo CLI
+        run: npm install -g expo-cli eas-cli
 
-      - run: npx expo prebuild
+      - name: Login with Expo Token
+        run: echo "EXPO_TOKEN=${{ secrets.EXPO_TOKEN }}" >> $GITHUB_ENV
 
-      - run: npx expo run:android
+      - name: Build APK
+        run: npx eas build -p android --non-interactive
